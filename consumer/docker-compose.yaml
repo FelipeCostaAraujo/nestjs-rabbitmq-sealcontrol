@@ -1,0 +1,18 @@
+version: '3'
+services:
+  consumer:
+    build: .
+    ports:
+      - 3001:3001
+    depends_on:
+      - rabbitmq
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=password
