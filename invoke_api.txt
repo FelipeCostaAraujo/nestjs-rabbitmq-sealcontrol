@@ -1,1 +1,4 @@
 Invoke-RestMethod -Uri http://localhost:3000/seal -Method Post -Headers @{"Content-Type"="application/json"} -Body '{"health": "Aberto"}'
+Invoke-RestMethod -Uri http://localhost:3000/seal -Method Get -Headers @{"Content-Type"="application/json"}
+Invoke-RestMethod -Uri http://localhost:3000/seal/yfvmswwctf -Method Patch -Headers @{"Content-Type"="application/json"} -Body '{"health": "Violado"}'
+Invoke-RestMethod -Uri http://localhost:3000/seal/yfvmswwctf -Method Get -Headers @{"Content-Type"="application/json"}

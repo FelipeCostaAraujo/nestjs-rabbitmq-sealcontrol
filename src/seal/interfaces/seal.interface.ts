@@ -1,5 +1,11 @@
 export interface Seal {
     id?: string;
-    heath?: string;
+    health?: SealHealth;
+  }
+
+  enum SealHealth {
+    open = 'Aberto',
+    close = 'Lacrado',
+    broken = 'Violado',
   }
   

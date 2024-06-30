@@ -1,32 +1,53 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSealDto } from './dto/create-seal.dto';
 import { UpdateSealDto } from './dto/update-seal.dto';
 import { ClientProxy } from '@nestjs/microservices';
+import { Seal } from './interfaces/seal.interface';
 
 @Injectable()
 export class SealService {
 
   constructor(@Inject('SEAL_SERVICE') private rabbitClient:ClientProxy){}
 
+  private readonly seals:Seal[] = [];
+
   create(createSealDto: CreateSealDto) {
-    this.rabbitClient.emit('create_seal', createSealDto);
-    return 'This action adds a new seal';
+    console.log(createSealDto);
+    const newSeal:Seal = {
+      id: Math.random().toString(36).substring(2, 15),
+      ...createSealDto
+    }
+    this.seals.push(newSeal);
+    return `Seal created ${newSeal.id}`;
   }
 
   findAll() {
-    return `This action returns all seal`;
+    return this.seals;
   }
 
-  findOne(id: number) {
-    this.rabbitClient.emit('get_seal', id);
+  findOne(id: string) {
+    const seal = this.seals.find(item => item.id === id);
+    console.log(seal);
+    console.log(seal.health);
+    if (!seal) {
+      throw new NotFoundException('Seal not found');
+    }
+    if (seal.health === 'Violado') {
+      this.rabbitClient.emit('alarm_queue', seal);
+      throw new ForbiddenException('Seal is broken');
+    }
     return `This action returns a #${id} seal`;
   }
 
-  update(id: number, updateSealDto: UpdateSealDto) {
+  update(id: String, updateSealDto: UpdateSealDto) {
+    const index = this.seals.findIndex(item => item.id === id);
+    if (index === -1) {
+      throw new NotFoundException('Seal not found');
+    }
+    this.seals[index] = {
+      ...this.seals[index],
+      ...updateSealDto
+    }
     return `This action updates a #${id} seal`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} seal`;
   }
 }

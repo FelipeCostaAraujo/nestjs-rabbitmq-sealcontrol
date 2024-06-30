@@ -19,11 +19,11 @@ export class SealController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.sealService.findOne(+id);
+    return this.sealService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateSealDto: UpdateSealDto) {
-    return this.sealService.update(+id, updateSealDto);
+    return this.sealService.update(id, updateSealDto);
   }
 }
