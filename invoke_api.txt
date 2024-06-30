@@ -1,0 +1,1 @@
+Invoke-RestMethod -Uri http://localhost:3000/seal -Method Post -Headers @{"Content-Type"="application/json"} -Body '{"health": "Aberto"}'
